@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: url(./img/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.backgroundContainer {
+    min-height: 100vh;
+    filter: grayscale(25%);
+}
+
+#mainContainer {
+    max-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 80px;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    height: 40px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #711c17da;
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 4px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    box-shadow: 1px 2px 10px white;
+}
+
+.pokemon {
+    width: 300px;
+    height: 200px;
+    background-color: wheat;
+    margin: 16px;
+    display: flex;
+    border-radius: 16px;
+}
+
+.information {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 0 70px 8px;
+}
+
+.name {
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.moreButton {
+    padding: 8px;
+    background-color: #711c17da;
+    color: white;
+    border-radius: 8px;
+    border: 1px solid white;
+    box-shadow: 1px 2px 10px white;
+}
+
+.moreButton:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
