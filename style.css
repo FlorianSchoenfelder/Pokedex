@@ -1,6 +1,9 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Indie Flower', cursive;
+    font-family: 'Noto Sans', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -43,24 +46,56 @@ body {
 }
 
 .pokemon {
-    width: 300px;
+    width: 330px;
     height: 200px;
     background-color: wheat;
     margin: 16px;
     display: flex;
     border-radius: 16px;
+    /* background: url(./img/pokeballBackground.png);
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-size: cover; */
+    
+}
+
+.pokemon:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+    transition: 300ms ease-in-out;
 }
 
 .information {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 16px 0 70px 8px;
+    padding: 16px 0 70px 12px;
+    flex: 1;
+    gap: 30px;
+}
+
+.mainInformation {
+    flex: 1;
+}
+
+img:hover {
+    transform: scale(1.3);
+    transition: 250ms ease-in-out;
 }
 
 .name {
     text-decoration: underline;
     font-weight: 600;
+}
+
+.pokemonImageContainer {
+    display: flex;
+    align-items: center;
+    padding-right: 16px;
+}
+
+.pokemonImage {
+    width: 160px;
 }
 
 .moreButton {
@@ -75,4 +110,68 @@ body {
 .moreButton:hover {
     cursor: pointer;
     transform: scale(1.1);
+    transition: 200ms ease-in;
+}
+
+.buttonContainer {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+
+
+.grassBackground {
+    background-color: #9BCC50;
+}
+
+.fireBackground {
+    background-color: #FD7D23;
+}
+
+.waterBackground {
+    background-color: #51C4E7;
+}
+
+.bugBackground {
+    background-color: #51C4E7;
+}
+
+.normalBackground {
+    background-color: #A4ACAF;
+}
+
+.poisonBackground {
+    background-color: #B97FC9;
+}
+
+.electricBackground {
+    background-color: #EED535;
+}
+
+.groundBackground {
+    background-color: #A38C21;
+}
+
+.fairyBackground {
+    background-color: #FDB9E9;
+}
+
+.fightingBackground {
+    background-color: #A38C21;
+}
+
+.psychicBackground {
+    background-color: #F366B9;
+}
+
+.rockBackground {
+    background-color: #A38C21;
+}
+
+.ghostBackground {
+    background-color: #7B61A2;
 }
