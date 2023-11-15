@@ -36,15 +36,13 @@ async function renderPokemonUrls() {
                 <div class="information">
                     <div class="name">${pokemonName}</div>
                     <div class="mainInformation">
-                        <span>
-                            #${pokemonData['id']} <br>
-                            ${pokemonData['weight']}Kg <br>
-                            ${type1}
-                        </span>
+                            <div><b>ID:</b> #${pokemonData['id']}</div>
+                            <div><b>Typ:</b> ${type1}</div>
+                            <div><b>Weight:</b> ${pokemonData['weight']}Kg</div>
                     </div>
                 </div>
                 <div class="pokemonImageContainer">
-                    <img class="pokemonImage" src="${pokemonData['sprites']['other']['official-artwork']['front_default']}">
+                    <img class="pokemonImage" src="${pokemonData['sprites']['other']['dream_world']['front_default']}">
                 </div>
                 
             </div>
@@ -61,9 +59,11 @@ async function renderPokemonUrls() {
     `;
 }
 
-function loadMorePokemons() {
+async function loadMorePokemons() {
     loadBeginning += 30;
-    init();
+    document.getElementById('mainContainer').innerHTML += '';
+    await loadpokemonApi();
+    await renderPokemonUrls();
 }
 
 function selectBackground(type1, index) {
