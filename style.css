@@ -14,14 +14,15 @@ body {
     background-position: center;
     background-attachment: fixed;
     /* background-image: linear-gradient(to bottom right, white, red) */
+}
 
-
-
+.d-none {
+    display: none;
 }
 
 .backgroundContainer {
     min-height: 100vh;
-    filter: grayscale(25%);
+    position: relative;
 }
 
 #mainContainer {
@@ -156,18 +157,116 @@ img:hover {
     padding-top: 20px;
 }
 
+#showpokemon {
+    position: absolute;
+    height: 100vh;
+}
+
+.pokemonBackground {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.pokemonCard {
+    height: 80vh;
+    width: 50vw;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardIdNumber {
+    height: 300px;
+    color: #d3d3d378;
+    font-size: 400px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardInformation {
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    color: white;
+    padding: 0px 64px 0 24px;
+    margin-top: -10px;
+}
+
+.aboutSection {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0px 40px;
+}
+
+.cardName {
+    display: flex;
+    justify-content: center;
+    font-size: 55px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.bodyInformation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bodyInformation div {
+    font-size: 22px;
+}
+
+.cardImagePosition {
+    margin-top: -140px;
+}
+
+.cardImage {
+    width: 325px;
+    height: 350px;
+}
+
+.animateIn {
+    animation: 1.5s fadeIn ease-in-out;
+}
+
+.animateOut {
+    animation: 1s fadeOut ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
 
 
 .grassBackground {
-    background-color: #73c000;
+    background-color: #6aa01a;
 }
 
 .fireBackground {
-    background-color: rgb(255, 106, 0)
+    background-color: rgb(202, 84, 0)
 }
 
 .waterBackground {
-    background-color: #19bcee;
+    background-color: #1295bd;
 }
 
 .bugBackground {
@@ -179,11 +278,11 @@ img:hover {
 }
 
 .poisonBackground {
-    background-color: #ad51c7;
+    background-color: #9043a5;
 }
 
 .electricBackground {
-    background-color: #f5d401;
+    background-color: #bba201;
 }
 
 .groundBackground {
@@ -191,7 +290,7 @@ img:hover {
 }
 
 .fairyBackground {
-    background-color: #b80181;
+    background-color: #7c0f5c;
 }
 
 .fightingBackground {
@@ -199,7 +298,7 @@ img:hover {
 }
 
 .psychicBackground {
-    background-color: #ff44b1;
+    background-color: #c53589;
 }
 
 .rockBackground {
@@ -207,5 +306,5 @@ img:hover {
 }
 
 .ghostBackground {
-    background-color: #7b43cf;
+    background-color: #6e3eb8;
 }
