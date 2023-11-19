@@ -25,6 +25,12 @@ body {
     position: relative;
 }
 
+.backgroundImage {
+    position: absolute;
+    height: 800px;
+    z-index: -1;
+}
+
 #mainContainer {
     max-height: 100vh;
     display: flex;
@@ -81,7 +87,7 @@ body {
 
 .pokemon:hover {
     cursor: pointer;
-    transform: scale(1.02);
+    /* transform: scale(1.02); */
     transition: 300ms ease-in-out;
 }
 
@@ -174,7 +180,7 @@ img:hover {
 .pokemonCard {
     height: 80vh;
     width: 50vw;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     display: flex;
     flex-direction: column;
 }
@@ -192,7 +198,7 @@ img:hover {
 .cardInformation {
     display: flex;
     justify-content: space-between;
-    height: 80px;
+    height: 200px;
     color: white;
     padding: 0px 64px 0 24px;
     margin-top: -10px;
@@ -214,7 +220,7 @@ img:hover {
 
 .bodyInformation {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 
 .bodyInformation div {
@@ -229,6 +235,21 @@ img:hover {
     width: 325px;
     height: 350px;
 }
+
+.chartContainer {
+    flex: 1;
+}
+
+#myChart {
+    height: 255px;
+    width: 100%;
+}
+
+.previous:hover, .next:hover {
+    cursor: pointer;
+    transform: none;
+}
+
 
 .animateIn {
     animation: 1.5s fadeIn ease-in-out;
@@ -256,7 +277,7 @@ img:hover {
     }
 }
 
-
+/* Card Backgrounds */
 .grassBackground {
     background-color: #6aa01a;
 }
@@ -294,7 +315,7 @@ img:hover {
 }
 
 .fightingBackground {
-    background-color: #A38C21;
+    background-color: #e2cd6c;
 }
 
 .psychicBackground {
@@ -307,4 +328,83 @@ img:hover {
 
 .ghostBackground {
     background-color: #6e3eb8;
+}
+
+/* Detailed Card Backgrounds */
+.detailedgrassBackground {
+    background-image: linear-gradient(to top, #426311, #78b320);
+    background-repeat: no-repeat;
+    /* background-color: #6aa01a; */
+}
+
+.detailedfireBackground {
+    background-image: linear-gradient(to top, rgb(82, 35, 1), rgb(228, 96, 2));
+    background-repeat: no-repeat;
+    /* background-color: rgb(202, 84, 0) */
+}
+
+.detailedwaterBackground {
+    background-image: linear-gradient(to top, #09475a, #18afdd);
+    background-repeat: no-repeat;
+    /* background-color: #1295bd; */
+}
+
+.detailedbugBackground {
+    background-image: linear-gradient(to top, #33550d, #67ac19);
+    background-repeat: no-repeat;
+    /* background-color: #4a7a12; */
+}
+
+.detailednormalBackground {
+    background-image: linear-gradient(to top, #363636, #919191);
+    background-repeat: no-repeat;
+    /* background-color: #7f8181; */
+}
+
+.detailedpoisonBackground {
+    background-image: linear-gradient(to top, #5f2c6b, #a04ab8);
+    background-repeat: no-repeat;
+    /* background-color: #9043a5; */
+}
+
+.detailedelectricBackground {
+    background-image: linear-gradient(to top, #948000, #d1b501);
+    background-repeat: no-repeat;
+    /* background-color: #bba201; */
+}
+
+.detailedgroundBackground {
+    background-image: linear-gradient(to top, #665611, #a78d19);
+    background-repeat: no-repeat;
+    /* background-color: #9c8417; */
+}
+
+.detailedfairyBackground {
+    background-image: linear-gradient(to top, #580b41, #a8167c);
+    background-repeat: no-repeat;
+    /* background-color: #7c0f5c; */
+}
+
+.detailedfightingBackground {
+    background-image: linear-gradient(to top, #e2cd6c, #e2cd6c);
+    background-repeat: no-repeat;
+    /* background-color: #e2cd6c; */
+}
+
+.detailedpsychicBackground {
+    background-image: linear-gradient(to top, #c53589, #c53589);
+    background-repeat: no-repeat;
+    /* background-color: #c53589; */
+}
+
+.detailedrockBackground {
+    background-image: linear-gradient(to top, #9b841c, #9b841c);
+    background-repeat: no-repeat;
+    /* background-color: #9b841c; */
+}
+
+.detailedghostBackground {
+    background-image: linear-gradient(to top, #6e3eb8, #6e3eb8);
+    background-repeat: no-repeat;
+    /* background-color: #6e3eb8; */
 }

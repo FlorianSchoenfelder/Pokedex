@@ -1,6 +1,7 @@
 let mainUrl = 'https://pokeapi.co/api/v2/pokemon/';
 let links = [];
 let loadBeginning = 30;
+let currentPokemon = 0;
 
 async function init() {
     await loadpokemonApi();
@@ -32,6 +33,8 @@ async function renderPokemonUrls() {
         let response = await fetch(url);
         let pokemonData = await response.json();
         let type1 = pokemonData['types']['0']['type']['name'];
+        let weightWithComma = pokemonData['weight'] * 0.1;
+        let weight = weightWithComma.toFixed(1);
 
         let pokemonName = pokemonData['name'].charAt(0).toUpperCase() + pokemonData['name'].slice(1);
         // console.log(pokemonData);
@@ -43,7 +46,7 @@ async function renderPokemonUrls() {
                     <div class="mainInformation">
                             <div><b>ID:</b> #${pokemonData['id']}</div>
                             <div><b>Typ:</b> ${type1}</div>
-                            <div><b>Weight:</b> ${pokemonData['weight']}Kg</div>
+                            <div><b>Weight:</b> ${weight}Kg</div>
                     </div>
                 </div>
                 <div class="pokemonImageContainer">
@@ -72,6 +75,7 @@ async function loadMorePokemons() {
 }
 
 async function showPokemon(j) {
+    currentPokemon = j;
     document.getElementById('showPokemon').classList.remove('d-none');
     document.getElementById('showPokemon').classList.add('animateIn');
     document.getElementById('mainContainer').classList.add('d-none');
@@ -80,27 +84,30 @@ async function showPokemon(j) {
     let url = links[j];
     let response = await fetch(url);
     let pokemon = await response.json();
-    let type1 = pokemon['types']['0']['type']['name'];
-    console.log(type1);
-    console.log(pokemon);
-    let number = `${pokemon['id']}`;
-    console.log(number);
-    let paddedNumber = number.padStart(3, "0");
-    let pokemonName = pokemon['name'].charAt(0).toUpperCase() + pokemon['name'].slice(1);
 
+    let detailSightVariables = variablesForDetailSight(pokemon); // detailSightVariables hat alle Variablen aus der Funktion
+    console.log(detailSightVariables.type2);
+    console.log(pokemon);
+    console.log(detailSightVariables.number);
 
     let pokemoncard = document.getElementById('showPokemon');
+    pokemoncard.innerHTML = '';
     pokemoncard.innerHTML += /*html*/`
-        <div class="pokemonBackground" id="pokemon_${j}" onclick="renderPokemonUrls()">
+        <div class="pokemonBackground" id="detailedPokemon_${j}" onclick="renderPokemonUrls()">
+            <div class="previousContainer" id="previous" onclick="stopPropagation(event)">
+                <img onclick="toPreviousPokemon()" class="previous" src="./img/arrowPrevious.svg" alt="">
+            </div>
             <div class="pokemonCard" id="pokemonCard" onclick="stopPropagation(event)">
                 <div class="cardIdNumber">
-                    #${paddedNumber}
+                    <span>#${detailSightVariables.paddedNumber}</span>
+                    
+                    <!-- Mit der Variable und .XXX wird der Wert herausgefiltert der benötigt wird.-->
                 </div>
 
                 <div class="cardInformation">
                     <div class="aboutSection"> <!--about -->
                         <div class="cardName"> <!-- Name-->
-                            ${pokemonName}
+                            ${detailSightVariables.pokemonName}
                         </div>
                         <div class="bodyInformation"> <!--Gewicht etc. -->
                             <div> <!-- Rechts-->
@@ -109,9 +116,9 @@ async function showPokemon(j) {
                             Abilities
                             </div>
                             <div> <!-- Links-->
-                            ${pokemon['height']} <br>
-                            ${pokemon['weight']} <br> 
-                            ${pokemon['abilities']['0']['ability']['name']}
+                            ${detailSightVariables.height}m <br>
+                            ${detailSightVariables.weight}kg<br> 
+                            ${detailSightVariables.abilities}
                             </div>
                         </div>
                     </div> 
@@ -119,13 +126,61 @@ async function showPokemon(j) {
                         <img class="cardImage" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
                     </div> 
                     
-                </div>                
-                <!-- ${pokemon['name']}
-                ${pokemon['height']} -->
+                </div>
+                <div class="chartContainer">
+                    <canvas id="myChart" onload="renderChart()">
+                        
+                    </canvas>
+                </div>
+                
+            </div>
+            <div class="nextContainer" id="next" onclick="stopPropagation(event)">
+                <img onclick="toNextPokemon()" class="next" src="./img/arrowNext.svg" alt="">
             </div>
         </div>
     `;
-    await selectBackground(type1, j);
+    await selectDetailedBackground(detailSightVariables.type2, j);
+}
+
+async function toPreviousPokemon() {
+    let button = document.getElementById('previous');
+    if (currentPokemon >= 1) {
+        currentPokemon-- ;
+    } else {
+        button.style.display = 'none';
+    }
+    showPokemon(currentPokemon);
+}
+
+
+async function toNextPokemon() {
+    if (currentPokemon <= links.length) {
+        currentPokemon++ ;
+    }
+    showPokemon(currentPokemon);
+}
+
+function variablesForDetailSight(pokemon) {
+    let type2 = pokemon['types']['0']['type']['name'];
+    let number = `${pokemon['id']}`;
+    let paddedNumber = number.padStart(3, "0");
+    let pokemonName = pokemon['name'].charAt(0).toUpperCase() + pokemon['name'].slice(1);
+    let abilities = pokemon['abilities']['0']['ability']['name'].charAt(0).toUpperCase() + pokemon['abilities']['0']['ability']['name'].slice(1)
+    let heightWithComma = pokemon['height'] * 0.1;
+    let height = heightWithComma.toFixed(1);
+    let weightWithComma = pokemon['weight'] * 0.1;
+    let weight = weightWithComma.toFixed(1);
+
+    // Return an object with the variables
+    return {
+        type2,
+        number,
+        paddedNumber,
+        pokemonName,
+        abilities,
+        height,
+        weight
+    };
 }
 
 function stopPropagation(event) {
@@ -159,6 +214,9 @@ function selectBackground(type1, index) {
     if (type1 == 'ground') {
         pokemonElement.classList.add('groundBackground');
     }
+    if (type1 == 'fighting') {
+        pokemonElement.classList.add('fightingBackground');
+    }
     if (type1 == 'fairy') {
         pokemonElement.classList.add('fairyBackground');
     }
@@ -170,5 +228,49 @@ function selectBackground(type1, index) {
     }
     if (type1 == 'ghost') {
         pokemonElement.classList.add('ghostBackground');
+    }
+}
+
+function selectDetailedBackground(type2, index) {
+    let detailedElement = document.getElementById('detailedPokemon_' + index);
+
+    if (type2 == 'grass') {
+        detailedElement.classList.add('detailedgrassBackground');
+    }
+    if (type2 == 'fire') {
+        detailedElement.classList.add('detailedfireBackground');
+    }
+    if (type2 == 'water') {
+        detailedElement.classList.add('detailedwaterBackground');
+    }
+    if (type2 == 'bug') {
+        detailedElement.classList.add('detailedbugBackground');
+    }
+    if (type2 == 'normal') {
+        detailedElement.classList.add('detailednormalBackground');
+    }
+    if (type2 == 'poison') {
+        detailedElement.classList.add('detailedpoisonBackground');
+    }
+    if (type2 == 'electric') {
+        detailedElement.classList.add('detailedelectricBackground');
+    }
+    if (type2 == 'ground') {
+        detailedElement.classList.add('detailedgroundBackground');
+    }
+    if (type2 == 'fighting') {
+        detailedElement.classList.add('detailedfightingBackground');
+    }
+    if (type2 == 'fairy') {
+        detailedElement.classList.add('detailedfairyBackground');
+    }
+    if (type2 == 'psychic') {
+        detailedElement.classList.add('detailedpsychicBackground');
+    }
+    if (type2 == 'rock') {
+        detailedElement.classList.add('detailedrockBackground');
+    }
+    if (type2 == 'ghost') {
+        detailedElement.classList.add('detailedghostBackground');
     }
 }
