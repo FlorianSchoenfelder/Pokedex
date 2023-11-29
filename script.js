@@ -2,6 +2,8 @@ let mainUrl = 'https://pokeapi.co/api/v2/pokemon/';
 let links = [];
 let loadBeginning = 30;
 let currentPokemon = 0;
+let loadedPokemons = [];
+let searchIndex = false;
 
 async function init() {
     await loadpokemonApi();
@@ -12,7 +14,6 @@ async function loadpokemonApi() {
     let url = mainUrl + `?limit=${loadBeginning}&offset=0`;
     let response = await fetch(url);
     let responseAsJson = await response.json();
-
     // console.log(responseAsJson['results']);
 
     for (let i = 0; i < responseAsJson['results'].length; i++) {
@@ -22,6 +23,7 @@ async function loadpokemonApi() {
 }
 
 async function renderPokemonUrls() {
+    loadedPokemons = [];
     document.getElementById('mainContainer').classList.add('animateIn');
     document.getElementById('showPokemon').classList.add('d-none');
     document.getElementById('mainContainer').classList.remove('d-none');
@@ -35,6 +37,8 @@ async function renderPokemonUrls() {
         let type1 = pokemonData['types']['0']['type']['name'];
         let weightWithComma = pokemonData['weight'] * 0.1;
         let weight = weightWithComma.toFixed(1);
+        loadedPokemons.push(pokemonData['name']);
+        // console.log(loadedPokemons);
 
         let pokemonName = pokemonData['name'].charAt(0).toUpperCase() + pokemonData['name'].slice(1);
         // console.log(pokemonData);
@@ -60,16 +64,17 @@ async function renderPokemonUrls() {
     }
 
     document.getElementById('mainContainer').innerHTML += /*html*/`
-        <div class="buttonContainer">
-            <button class="moreButton" onclick="loadMorePokemons()">Load More</button>
-        </div>
+        
         
     `;
 }
 
 async function loadMorePokemons() {
     loadBeginning += 30;
+    
     document.getElementById('mainContainer').innerHTML += '';
+    links = [];
+    loadedPokemons = [];
     await loadpokemonApi();
     await renderPokemonUrls();
 }
@@ -80,6 +85,8 @@ async function showPokemon(j) {
     document.getElementById('showPokemon').classList.add('animateIn');
     document.getElementById('mainContainer').classList.add('d-none');
     document.getElementById('backgroundContainer').classList.add('d-none');
+    let inputField = document.getElementById('searching');
+    // inputField.value = ''; // Falls vorher über die Suchfunktion ein Pokemon gesucht wurde, wird das Inputfeld geleert.
 
     let url = links[j];
     let response = await fetch(url);
@@ -93,7 +100,7 @@ async function showPokemon(j) {
     let pokemoncard = document.getElementById('showPokemon');
     pokemoncard.innerHTML = '';
     pokemoncard.innerHTML += /*html*/`
-        <div class="pokemonBackground" id="detailedPokemon_${j}" onclick="renderPokemonUrls()">
+        <div class="pokemonBackground" id="detailedPokemon_${j}" onclick="closePokemon()">
             <div class="previousContainer" id="previous" onclick="stopPropagation(event)">
                 <img onclick="toPreviousPokemon()" class="previous" src="./img/arrowPrevious.svg" alt="">
             </div>
@@ -142,6 +149,13 @@ async function showPokemon(j) {
     await selectDetailedBackground(detailSightVariables.type2, j);
 }
 
+async function closePokemon() {
+    document.getElementById('showPokemon').classList.add('d-none');
+    document.getElementById('showPokemon').classList.remove('animateIn');
+    document.getElementById('mainContainer').classList.remove('d-none');
+    document.getElementById('backgroundContainer').classList.remove('d-none');
+}
+
 async function toPreviousPokemon() {
     let button = document.getElementById('previous');
     if (currentPokemon >= 1) {
@@ -181,6 +195,71 @@ function variablesForDetailSight(pokemon) {
         height,
         weight
     };
+}
+
+async function searchPokemon() {
+    let searchInput = document.getElementById('searching').value.toLowerCase(); 
+
+    if (!searchInput == '') {
+        let searchResultContainer = document.getElementById('mainContainer');
+            searchResultContainer.innerHTML = ''; // Clear previous results
+            document.getElementById('showMore').classList.add('d-none');
+            searchIndex = true;
+
+        for (let index = 0; index < loadedPokemons.length; index++) {
+            let name = loadedPokemons[index];
+            if (name.toLowerCase().includes(searchInput)) {
+            await displayPokemon(name, index);
+            }
+            
+        }
+
+    }
+    else if (searchInput == '' && searchIndex === true) {
+        searchIndex = false;
+        renderPokemonUrls();
+        document.getElementById('showMore').classList.remove('d-none');
+    }
+}
+
+async function displayPokemon(pokemon, index) {
+
+    try {
+        let link = mainUrl + `${pokemon}`;
+        let response = await fetch(link);
+
+        if (!response.ok) {
+            alert(`Unable to fetch data for ${pokemon}`);
+        }
+
+        let data = await response.json();
+        let pokemonHTML = getPokemonHTML(data, index);
+
+        document.getElementById('mainContainer').innerHTML += pokemonHTML;
+        selectBackground(data['types'][0]['type']['name'], index);
+        document.getElementById('mainContainer').setAttribute("class", "mainContainerSearch");
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function getPokemonHTML(data, index) {
+    return /*html*/`
+        <div class="pokemon" id="pokemon_${index}" onclick="showPokemon(${index})">
+            <div class="information">
+                <div class="name">${data['name']}</div>
+                <div class="mainInformation">
+                    <div><b>ID:</b> #${data['id']}</div>
+                    <div><b>Typ:</b> ${data['types'][0]['type']['name']}</div>
+                    <div><b>Weight:</b> ${data['weight']}Kg</div>
+                </div>
+            </div>
+            <div class="pokemonImageContainer">
+                <img class="pokemonImage" src="${data['sprites']['other']['dream_world']['front_default']}">
+            </div>
+        </div> 
+    `;
 }
 
 function stopPropagation(event) {

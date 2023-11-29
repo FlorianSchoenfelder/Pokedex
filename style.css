@@ -32,12 +32,22 @@ body {
 }
 
 #mainContainer {
-    max-height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
     padding-top: 40px;
     justify-content: center;
     align-items: center;
+}
+
+.mainContainerSearch {
+    min-height: fit-content !important;
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 40px;
+    justify-content: center;
+    align-items: flex-start !important;
+    overflow-y: hidden;
 }
 
 .header {
