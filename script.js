@@ -4,6 +4,7 @@ let loadBeginning = 30;
 let currentPokemon = 0;
 let loadedPokemons = [];
 let searchIndex = false;
+pokemonStats = [];
 
 async function init() {
     await loadpokemonApi();
@@ -14,13 +15,13 @@ async function loadpokemonApi() {
     let url = mainUrl + `?limit=${loadBeginning}&offset=0`;
     let response = await fetch(url);
     let responseAsJson = await response.json();
-    // console.log(responseAsJson['results']);
 
     for (let i = 0; i < responseAsJson['results'].length; i++) {
         const element = responseAsJson['results'][i];
         links.push(element['url']); // Speichere nur die URL in der links-Liste
     }
 }
+// console.log(responseAsJson['results']);
 
 async function renderPokemonUrls() {
     loadedPokemons = [];
@@ -34,44 +35,42 @@ async function renderPokemonUrls() {
         const url = links[j];
         let response = await fetch(url);
         let pokemonData = await response.json();
-        let type1 = pokemonData['types']['0']['type']['name'];
-        let weightWithComma = pokemonData['weight'] * 0.1;
-        let weight = weightWithComma.toFixed(1);
+
+        let detailSightVariables = variablesForDetailSight(pokemonData);
         loadedPokemons.push(pokemonData['name']);
-        // console.log(loadedPokemons);
+        document.getElementById('mainContainer').innerHTML += renderPokemonUrlsHTML(detailSightVariables, pokemonData, j);
 
-        let pokemonName = pokemonData['name'].charAt(0).toUpperCase() + pokemonData['name'].slice(1);
-        // console.log(pokemonData);
-
-        document.getElementById('mainContainer').innerHTML += /*html*/`
-            <div class="pokemon" id="pokemon_${j}" onclick="showPokemon(${j})">
-                <div class="information">
-                    <div class="name">${pokemonName}</div>
-                    <div class="mainInformation">
-                            <div><b>ID:</b> #${pokemonData['id']}</div>
-                            <div><b>Typ:</b> ${type1}</div>
-                            <div><b>Weight:</b> ${weight}Kg</div>
-                    </div>
-                </div>
-                <div class="pokemonImageContainer">
-                    <img class="pokemonImage" src="${pokemonData['sprites']['other']['dream_world']['front_default']}">
-                </div>
-                
-            </div>
-        `;
-
-        await selectBackground(type1, j);
+        await selectBackground(detailSightVariables.type1, j);
     }
+}
+// let type1 = pokemonData['types']['0']['type']['name'];
+// let weightWithComma = pokemonData['weight'] * 0.1;
+// let weight = weightWithComma.toFixed(1);
+// console.log(loadedPokemons);
+// let pokemonName = pokemonData['name'].charAt(0).toUpperCase() + pokemonData['name'].slice(1);
+// console.log(pokemonData);
+// document.getElementById('mainContainer').innerHTML +=``;
 
-    document.getElementById('mainContainer').innerHTML += /*html*/`
-        
-        
-    `;
+function renderPokemonUrlsHTML(detailSightVariables, pokemonData, j) {
+    return  /*html*/`
+    <div class="pokemon" id="pokemon_${j}" onclick="showPokemon(${j})">
+        <div class="information">
+            <div class="name">${detailSightVariables.pokemonName}</div>
+            <div class="mainInformation">
+                    <div><b>ID:</b> #${pokemonData['id']}</div>
+                    <div><b>Typ:</b> ${detailSightVariables.type1}</div>
+                    <div><b>Weight:</b> ${detailSightVariables.weight}Kg</div>
+            </div>
+        </div>
+        <div class="pokemonImageContainer">
+            <img class="pokemonImage" src="${pokemonData['sprites']['other']['dream_world']['front_default']}">
+        </div>        
+    </div>
+`;
 }
 
 async function loadMorePokemons() {
     loadBeginning += 30;
-    
     document.getElementById('mainContainer').innerHTML += '';
     links = [];
     loadedPokemons = [];
@@ -99,55 +98,123 @@ async function showPokemon(j) {
 
     let pokemoncard = document.getElementById('showPokemon');
     pokemoncard.innerHTML = '';
-    pokemoncard.innerHTML += /*html*/`
-        <div class="pokemonBackground" id="detailedPokemon_${j}" onclick="closePokemon()">
-            <div class="previousContainer" id="previous" onclick="stopPropagation(event)">
-                <img onclick="toPreviousPokemon()" class="previous" src="./img/arrowPrevious.svg" alt="">
-            </div>
-            <div class="pokemonCard" id="pokemonCard" onclick="stopPropagation(event)">
-                <div class="cardIdNumber">
-                    <span>#${detailSightVariables.paddedNumber}</span>
-                    
-                    <!-- Mit der Variable und .XXX wird der Wert herausgefiltert der benötigt wird.-->
-                </div>
+    pokemoncard.innerHTML += showPokemonHTML(detailSightVariables, pokemon, j);
+    await selectDetailedBackground(detailSightVariables.type2, j);
+    await renderChart(pokemon);
+}
 
-                <div class="cardInformation">
-                    <div class="aboutSection"> <!--about -->
-                        <div class="cardName"> <!-- Name-->
-                            ${detailSightVariables.pokemonName}
+function showPokemonHTML(detailSightVariables, pokemon, j) {
+    return /*html*/`
+    <div class="pokemonBackground" id="detailedPokemon_${j}" onclick="closePokemon()">
+        <div class="previousContainer" id="previous" onclick="stopPropagation(event)">
+            <img onclick="toPreviousPokemon()" class="previous" src="./img/arrowPrevious.svg" alt="">
+        </div>
+        <div class="pokemonCard" id="pokemonCard" onclick="stopPropagation(event)">
+            <div class="cardIdNumber">
+                <span>#${detailSightVariables.paddedNumber}</span>
+                <!-- Mit der Variable und .XXX wird der Wert herausgefiltert der benötigt wird.-->
+            </div>
+
+            <div class="cardInformation">
+                <div class="aboutSection"> <!--about -->
+                    <div class="cardName"> <!-- Name-->
+                        ${detailSightVariables.pokemonName}
+                    </div>
+                    <div class="bodyInformation"> <!--Gewicht etc. -->
+                        <div> <!-- Rechts-->
+                        Height <br>
+                        Weight <br>
+                        Abilities
                         </div>
-                        <div class="bodyInformation"> <!--Gewicht etc. -->
-                            <div> <!-- Rechts-->
-                            Height <br>
-                            Weight <br>
-                            Abilities
-                            </div>
-                            <div> <!-- Links-->
-                            ${detailSightVariables.height}m <br>
-                            ${detailSightVariables.weight}kg<br> 
-                            ${detailSightVariables.abilities}
-                            </div>
+                        <div> <!-- Links-->
+                        ${detailSightVariables.height}m <br>
+                        ${detailSightVariables.weight}kg<br> 
+                        ${detailSightVariables.abilities}
                         </div>
-                    </div> 
-                    <div class="cardImagePosition"> <!-- IMG-->
-                        <img class="cardImage" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
-                    </div> 
-                    
-                </div>
-                <div class="chartContainer">
-                    <canvas id="myChart" onload="renderChart()">
-                        
-                    </canvas>
-                </div>
+                    </div>
+                </div> 
+                <div class="cardImagePosition"> <!-- IMG-->
+                    <img class="cardImage" src="${pokemon['sprites']['other']['dream_world']['front_default']}">
+                </div> 
                 
             </div>
-            <div class="nextContainer" id="next" onclick="stopPropagation(event)">
-                <img onclick="toNextPokemon()" class="next" src="./img/arrowNext.svg" alt="">
+            <div class="chartContainer">
+                <canvas id="myChart" width="800px" height="300px"  onload="renderChart(${pokemon})">
+                    
+                </canvas>
             </div>
+            
         </div>
-    `;
-    await selectDetailedBackground(detailSightVariables.type2, j);
+        <div class="nextContainer" id="next" onclick="stopPropagation(event)">
+            <img onclick="toNextPokemon()" class="next" src="./img/arrowNext.svg" alt="">
+        </div>
+    </div>
+`;
 }
+
+function variablesForStats(pokemon) {
+
+    let stat1 = pokemon['stats']['0']['base_stat'];
+    let stat2 = pokemon['stats']['1']['base_stat'];
+    let stat3 = pokemon['stats']['2']['base_stat'];
+    let stat4 = pokemon['stats']['3']['base_stat'];
+    let stat5 = pokemon['stats']['4']['base_stat'];
+    let stat6 = pokemon['stats']['5']['base_stat'];
+    return {
+        stat1,
+        stat2,
+        stat3,
+        stat4,
+        stat5,
+        stat6
+    };
+}
+
+async function renderChart(pokemon) {
+    let detailSightVariables = variablesForStats(pokemon);
+    const ctx = document.getElementById('myChart');
+    Chart.defaults.color = '#FFFFFF';
+    Chart.defaults.borderColor = 'black';
+
+    new Chart(ctx, {
+        type: 'bar',
+        backgroundColor: '#FFFFFF',
+        data: {
+            labels: ['HP', 'Attack', 'Defense', 'Sp. Attack', 'Sp. Defense', 'Speed'],
+
+            datasets: [{
+                label: 'Stat Values',
+                data: [detailSightVariables.stat1, detailSightVariables.stat2, detailSightVariables.stat3, detailSightVariables.stat4, detailSightVariables.stat5, detailSightVariables.stat6],
+                borderWidth: 2,
+                borderColor: 'black',
+                borderRadius: 50,
+                
+            }]
+        },
+        plugins: [ChartDataLabels],
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    display: false,
+                    max: 100
+                },
+                y: {
+                    beginAtZero: true,
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                filler: {
+                    propagate: true
+                }
+            }
+        }
+    });
+}
+
 
 async function closePokemon() {
     document.getElementById('showPokemon').classList.add('d-none');
@@ -159,7 +226,7 @@ async function closePokemon() {
 async function toPreviousPokemon() {
     let button = document.getElementById('previous');
     if (currentPokemon >= 1) {
-        currentPokemon-- ;
+        currentPokemon--;
     } else {
         button.style.display = 'none';
     }
@@ -169,12 +236,13 @@ async function toPreviousPokemon() {
 
 async function toNextPokemon() {
     if (currentPokemon <= links.length) {
-        currentPokemon++ ;
+        currentPokemon++;
     }
     showPokemon(currentPokemon);
 }
 
 function variablesForDetailSight(pokemon) {
+    let type1 = pokemon['types']['0']['type']['name'];
     let type2 = pokemon['types']['0']['type']['name'];
     let number = `${pokemon['id']}`;
     let paddedNumber = number.padStart(3, "0");
@@ -187,33 +255,33 @@ function variablesForDetailSight(pokemon) {
 
     // Return an object with the variables
     return {
+        type1,
         type2,
         number,
         paddedNumber,
         pokemonName,
         abilities,
         height,
-        weight
+        weight,
+
     };
 }
 
 async function searchPokemon() {
-    let searchInput = document.getElementById('searching').value.toLowerCase(); 
+    let searchInput = document.getElementById('searching').value.toLowerCase();
 
     if (!searchInput == '') {
         let searchResultContainer = document.getElementById('mainContainer');
-            searchResultContainer.innerHTML = ''; // Clear previous results
-            document.getElementById('showMore').classList.add('d-none');
-            searchIndex = true;
+        searchResultContainer.innerHTML = ''; // Clear previous results
+        document.getElementById('showMore').classList.add('d-none');
+        searchIndex = true;
 
         for (let index = 0; index < loadedPokemons.length; index++) {
             let name = loadedPokemons[index];
             if (name.toLowerCase().includes(searchInput)) {
-            await displayPokemon(name, index);
+                await displayPokemon(name, index);
             }
-            
         }
-
     }
     else if (searchInput == '' && searchIndex === true) {
         searchIndex = false;

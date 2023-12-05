@@ -188,7 +188,7 @@ img:hover {
 }
 
 .pokemonCard {
-    height: 80vh;
+    height: 85vh;
     width: 50vw;
     /* border: 1px solid black; */
     display: flex;
@@ -247,12 +247,13 @@ img:hover {
 }
 
 .chartContainer {
-    flex: 1;
+    height: 300px;
+    display: flex;
+    justify-content: center;
 }
 
 #myChart {
     height: 255px;
-    width: 100%;
 }
 
 .previous:hover, .next:hover {
