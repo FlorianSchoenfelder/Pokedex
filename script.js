@@ -70,7 +70,7 @@ async function showPokemon(j) {
     if (currentPokemon == 0) { // Wenn erstes Pokemon ausgewählt, dann kein Pfeil mehr Richtung zurück.
         document.getElementById('previous').classList.add('d-none');
     }
-    if (currentPokemon == links.length -1) { // Letztes Pokemon in der Liste = nicht kein Pfeil Richtung weiter.
+    if (currentPokemon == links.length - 1) { // Letztes Pokemon in der Liste = nicht kein Pfeil Richtung weiter.
         document.getElementById('next').classList.add('d-none');
     }
 }

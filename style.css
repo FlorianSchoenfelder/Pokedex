@@ -7,13 +7,30 @@
 }
 
 body {
-    /* background: url(./img/background.jpg); */
     background-image: linear-gradient(to top, #141e30, #243b55);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    /* background-image: linear-gradient(to bottom right, white, red) */
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    background-image: linear-gradient(to top, #141e30, #243b55);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #243b55;
+    border-radius: 10px;
+    border: 2px solid white;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #172535;
 }
 
 .d-none {
@@ -27,8 +44,27 @@ body {
 
 .backgroundImage {
     position: absolute;
-    height: 800px;
     z-index: -1;
+    height: 14%;
+    left: 24px;
+    top: 10px;
+}
+
+.psyduck {
+    position: fixed;
+    z-index: -1;
+    height: 69%;
+    right: 200px;
+    top: -280px;
+    rotate: 180deg;
+}
+
+.cracksImage {
+    position: fixed;
+    z-index: -1;
+    height: 90%;
+    right: -120px;
+    bottom: -140px;
 }
 
 #mainContainer {
@@ -60,6 +96,10 @@ body {
     font-size: 50px;
 }
 
+.header span {
+    text-align: center;
+}
+
 .searchContainer {
     width: 400px;
     display: flex;
@@ -73,16 +113,8 @@ body {
     border: 3px solid black;
 }
 
-.searchContainer button {
-    padding: 16px;
-    border-radius: 16px;
-    border: none;
-    box-shadow: 1px 1px 4px black;
-}
-
-.searchContainer button:hover {
-    cursor: pointer;
-    transform: scale(1.05);
+input:focus-visible {
+    outline: none;
 }
 
 .pokemon {
@@ -97,7 +129,6 @@ body {
 
 .pokemon:hover {
     cursor: pointer;
-    /* transform: scale(1.02); */
     transition: 300ms ease-in-out;
 }
 
@@ -190,7 +221,6 @@ img:hover {
 .pokemonCard {
     height: 85vh;
     width: 50vw;
-    /* border: 1px solid black; */
     display: flex;
     flex-direction: column;
 }
@@ -272,7 +302,8 @@ img:hover {
     justify-content: end;
 }
 
-.previous:hover, .next:hover {
+.previous:hover,
+.next:hover {
     cursor: pointer;
     transform: none;
 }
@@ -296,6 +327,7 @@ img:hover {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -305,6 +337,7 @@ img:hover {
     from {
         opacity: 1;
     }
+
     to {
         opacity: 0;
     }
@@ -367,77 +400,64 @@ img:hover {
 .detailedgrassBackground {
     background-image: linear-gradient(to top, #426311, #78b320);
     background-repeat: no-repeat;
-    /* background-color: #6aa01a; */
 }
 
 .detailedfireBackground {
     background-image: linear-gradient(to top, rgb(82, 35, 1), rgb(228, 96, 2));
     background-repeat: no-repeat;
-    /* background-color: rgb(202, 84, 0) */
 }
 
 .detailedwaterBackground {
     background-image: linear-gradient(to top, #09475a, #18afdd);
     background-repeat: no-repeat;
-    /* background-color: #1295bd; */
 }
 
 .detailedbugBackground {
     background-image: linear-gradient(to top, #33550d, #67ac19);
     background-repeat: no-repeat;
-    /* background-color: #4a7a12; */
 }
 
 .detailednormalBackground {
     background-image: linear-gradient(to top, #363636, #919191);
     background-repeat: no-repeat;
-    /* background-color: #7f8181; */
 }
 
 .detailedpoisonBackground {
     background-image: linear-gradient(to top, #5f2c6b, #a04ab8);
     background-repeat: no-repeat;
-    /* background-color: #9043a5; */
 }
 
 .detailedelectricBackground {
     background-image: linear-gradient(to top, #948000, #d1b501);
     background-repeat: no-repeat;
-    /* background-color: #bba201; */
 }
 
 .detailedgroundBackground {
     background-image: linear-gradient(to top, #665611, #a78d19);
     background-repeat: no-repeat;
-    /* background-color: #9c8417; */
 }
 
 .detailedfairyBackground {
     background-image: linear-gradient(to top, #580b41, #a8167c);
     background-repeat: no-repeat;
-    /* background-color: #7c0f5c; */
 }
 
 .detailedfightingBackground {
     background-image: linear-gradient(to top, #a59344, #c0aa4a);
     background-repeat: no-repeat;
-    /* background-color: #e2cd6c; */
 }
 
 .detailedpsychicBackground {
     background-image: linear-gradient(to top, #c53589, #c53589);
     background-repeat: no-repeat;
-    /* background-color: #c53589; */
 }
 
 .detailedrockBackground {
     background-image: linear-gradient(to top, #9b841c, #9b841c);
     background-repeat: no-repeat;
-    /* background-color: #9b841c; */
 }
 
 .detailedghostBackground {
     background-image: linear-gradient(to top, #6e3eb8, #6e3eb8);
     background-repeat: no-repeat;
-    /* background-color: #6e3eb8; */
 }
