@@ -250,10 +250,26 @@ img:hover {
     height: 300px;
     display: flex;
     justify-content: center;
+    width: 95%;
 }
 
 #myChart {
     height: 255px;
+}
+
+.previousContainer {
+    position: absolute;
+    left: 18%;
+}
+
+.nextContainer {
+    position: absolute;
+    right: 18%;
+}
+
+.next {
+    display: flex;
+    justify-content: end;
 }
 
 .previous:hover, .next:hover {
@@ -261,6 +277,12 @@ img:hover {
     transform: none;
 }
 
+.closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: none;
+}
 
 .animateIn {
     animation: 1.5s fadeIn ease-in-out;
@@ -397,7 +419,7 @@ img:hover {
 }
 
 .detailedfightingBackground {
-    background-image: linear-gradient(to top, #e2cd6c, #e2cd6c);
+    background-image: linear-gradient(to top, #a59344, #c0aa4a);
     background-repeat: no-repeat;
     /* background-color: #e2cd6c; */
 }
