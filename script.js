@@ -24,12 +24,8 @@ async function loadpokemonApi() {
 
 async function renderPokemonUrls() {
     loadedPokemons = [];
-    document.getElementById('mainContainer').classList.add('animateIn');
-    document.getElementById('showPokemon').classList.add('d-none');
-    document.getElementById('mainContainer').classList.remove('d-none');
-    document.getElementById('backgroundContainer').classList.remove('d-none');
-    document.getElementById('showPokemon').innerHTML = '';
-    document.getElementById('mainContainer').innerHTML = '';
+    changeElements();
+
     for (let j = 0; j < links.length; j++) {
         const url = links[j];
         let response = await fetch(url);
@@ -37,26 +33,43 @@ async function renderPokemonUrls() {
         let detailSightVariables = variablesForDetailSight(pokemonData);
         loadedPokemons.push(pokemonData['name']);
         document.getElementById('mainContainer').innerHTML += renderPokemonUrlsHTML(detailSightVariables, pokemonData, j);
-
         await selectBackground(detailSightVariables.type1, j);
     }
 }
 
+function changeElements() {
+    document.getElementById('mainContainer').classList.add('animateIn');
+    document.getElementById('showPokemon').classList.add('d-none');
+    document.getElementById('mainContainer').classList.remove('d-none');
+    document.getElementById('backgroundContainer').classList.remove('d-none');
+    document.getElementById('showPokemon').innerHTML = '';
+    document.getElementById('mainContainer').innerHTML = '';
+}
+
 async function loadMorePokemons() {
-    loadBeginning += 30;
+    loadAnimation();
+    loadBeginning += 50;
     document.getElementById('mainContainer').innerHTML += '';
     links = [];
     loadedPokemons = [];
     await loadpokemonApi();
-    await renderPokemonUrls();
+    setTimeout(await renderPokemonUrls(), 4000);
+    endLoadAnimation();
+}
+
+function loadAnimation() {
+    let animateShow = document.getElementById('loadingScreenId');
+    animateShow.style.display = "block";
+}
+
+function endLoadAnimation() {
+    let animateShow = document.getElementById('loadingScreenId');
+    animateShow.style.display = "none";
 }
 
 async function showPokemon(j) {
     currentPokemon = j;
-    document.getElementById('showPokemon').classList.remove('d-none');
-    document.getElementById('showPokemon').classList.add('animateIn');
-    document.getElementById('mainContainer').classList.add('d-none');
-    document.getElementById('backgroundContainer').classList.add('d-none');
+    changeElementsOnDisplayedPokemon();
     let url = links[j];
     let response = await fetch(url);
     let pokemon = await response.json();
@@ -65,7 +78,7 @@ async function showPokemon(j) {
 
     pokemoncard.innerHTML = '';
     pokemoncard.innerHTML += showPokemonHTML(detailSightVariables, pokemon, j);
-    await selectDetailedBackground(detailSightVariables.type2, j);
+    await selectBackground(detailSightVariables.type1, j);
     await renderChart(pokemon);
     if (currentPokemon == 0) { // Wenn erstes Pokemon ausgewählt, dann kein Pfeil mehr Richtung zurück.
         document.getElementById('previous').classList.add('d-none');
@@ -73,6 +86,13 @@ async function showPokemon(j) {
     if (currentPokemon == links.length - 1) { // Letztes Pokemon in der Liste = nicht kein Pfeil Richtung weiter.
         document.getElementById('next').classList.add('d-none');
     }
+}
+
+function changeElementsOnDisplayedPokemon() {
+    document.getElementById('showPokemon').classList.remove('d-none');
+    document.getElementById('showPokemon').classList.add('animateIn');
+    document.getElementById('mainContainer').classList.add('d-none');
+    document.getElementById('backgroundContainer').classList.add('d-none');
 }
 
 function variablesForStats(pokemon) {
@@ -91,53 +111,6 @@ function variablesForStats(pokemon) {
         stat5,
         stat6
     };
-}
-
-async function renderChart(pokemon) {
-    let detailSightVariables = variablesForStats(pokemon);
-    const ctx = document.getElementById('myChart');
-    Chart.defaults.color = '#FFFFFF';
-    Chart.defaults.borderColor = 'black';
-
-    let chartJsOptions = {
-        maintainAspectRatio: false,
-        indexAxis: 'y',
-        scales: {
-            x: {
-                display: false,
-                max: 100
-            },
-            y: {
-                beginAtZero: true,
-            }
-        },
-        plugins: {
-            legend: {
-                display: false
-            },
-            filler: {
-                propagate: true
-            }
-        }
-    };
-    let chartJsData = {
-        labels: ['HP', 'Attack', 'Defense', 'Sp. Attack', 'Sp. Defense', 'Speed'],
-        datasets: [{
-            label: 'Stat Values',
-            data: [detailSightVariables.stat1, detailSightVariables.stat2, detailSightVariables.stat3, detailSightVariables.stat4, detailSightVariables.stat5, detailSightVariables.stat6],
-            borderWidth: 2,
-            borderColor: 'black',
-            borderRadius: 50,
-        }]
-    };
-    let chartJsConfig = {
-        type: 'bar',
-        backgroundColor: '#FFFFFF',
-        data: chartJsData,
-        plugins: [ChartDataLabels],
-        options: chartJsOptions
-    };
-    new Chart(ctx, chartJsConfig);
 }
 
 async function closePokemon() {
@@ -164,7 +137,6 @@ async function toNextPokemon() {
 
 function variablesForDetailSight(pokemon) {
     let type1 = pokemon['types']['0']['type']['name'];
-    let type2 = pokemon['types']['0']['type']['name'];
     let number = `${pokemon['id']}`;
     let paddedNumber = number.padStart(3, "0");
     let pokemonName = pokemon['name'].charAt(0).toUpperCase() + pokemon['name'].slice(1);
@@ -176,7 +148,6 @@ function variablesForDetailSight(pokemon) {
     // Return an object with the variables
     return {
         type1,
-        type2,
         number,
         paddedNumber,
         pokemonName,
@@ -189,23 +160,37 @@ function variablesForDetailSight(pokemon) {
 async function searchPokemon() {
     let searchInput = document.getElementById('searching').value.toLowerCase();
     if (!searchInput == '') {
-        let searchResultContainer = document.getElementById('mainContainer');
-        searchResultContainer.innerHTML = ''; // Clear previous results
+        clearPreviousResults();
+        loadAnimation();
+        
         document.getElementById('showMore').classList.add('d-none');
         searchIndex = true;
-
         for (let index = 0; index < loadedPokemons.length; index++) {
             let name = loadedPokemons[index];
             if (name.toLowerCase().includes(searchInput)) {
-                await displayPokemon(name, index);
+                setTimeout(await displayPokemon(name, index), 1000);
             }
         }
+        
     }
-    else if (searchInput == '' && searchIndex === true) {
-        searchIndex = false;
-        renderPokemonUrls();
-        document.getElementById('showMore').classList.remove('d-none');
+    else if (searchInput == '' && searchIndex === true) { //Aufgerufen wenn Textfeld leer
+        emptyInput();
     }
+    endLoadAnimation();
+}
+
+function clearPreviousResults() {
+    let searchResultContainer = document.getElementById('mainContainer');
+        searchResultContainer.innerHTML = '';
+}
+
+
+async function emptyInput() {
+    loadAnimation();
+    searchIndex = false;
+    setTimeout(await renderPokemonUrls(), 2000);
+    document.getElementById('showMore').classList.remove('d-none');
+    endLoadAnimation();
 }
 
 async function displayPokemon(pokemon, index) {
@@ -233,88 +218,5 @@ function stopPropagation(event) {
 
 function selectBackground(type1, index) {
     let pokemonElement = document.getElementById('pokemon_' + index);
-
-    if (type1 == 'grass') {
-        pokemonElement.classList.add('grassBackground');
-    }
-    if (type1 == 'fire') {
-        pokemonElement.classList.add('fireBackground');
-    }
-    if (type1 == 'water') {
-        pokemonElement.classList.add('waterBackground');
-    }
-    if (type1 == 'bug') {
-        pokemonElement.classList.add('bugBackground');
-    }
-    if (type1 == 'normal') {
-        pokemonElement.classList.add('normalBackground');
-    }
-    if (type1 == 'poison') {
-        pokemonElement.classList.add('poisonBackground');
-    }
-    if (type1 == 'electric') {
-        pokemonElement.classList.add('electricBackground');
-    }
-    if (type1 == 'ground') {
-        pokemonElement.classList.add('groundBackground');
-    }
-    if (type1 == 'fighting') {
-        pokemonElement.classList.add('fightingBackground');
-    }
-    if (type1 == 'fairy') {
-        pokemonElement.classList.add('fairyBackground');
-    }
-    if (type1 == 'psychic') {
-        pokemonElement.classList.add('psychicBackground');
-    }
-    if (type1 == 'rock') {
-        pokemonElement.classList.add('rockBackground');
-    }
-    if (type1 == 'ghost') {
-        pokemonElement.classList.add('ghostBackground');
-    }
-}
-
-function selectDetailedBackground(type2, index) {
-    let detailedElement = document.getElementById('detailedPokemon_' + index);
-
-    if (type2 == 'grass') {
-        detailedElement.classList.add('detailedgrassBackground');
-    }
-    if (type2 == 'fire') {
-        detailedElement.classList.add('detailedfireBackground');
-    }
-    if (type2 == 'water') {
-        detailedElement.classList.add('detailedwaterBackground');
-    }
-    if (type2 == 'bug') {
-        detailedElement.classList.add('detailedbugBackground');
-    }
-    if (type2 == 'normal') {
-        detailedElement.classList.add('detailednormalBackground');
-    }
-    if (type2 == 'poison') {
-        detailedElement.classList.add('detailedpoisonBackground');
-    }
-    if (type2 == 'electric') {
-        detailedElement.classList.add('detailedelectricBackground');
-    }
-    if (type2 == 'ground') {
-        detailedElement.classList.add('detailedgroundBackground');
-    }
-    if (type2 == 'fighting') {
-        detailedElement.classList.add('detailedfightingBackground');
-    }
-    if (type2 == 'fairy') {
-        detailedElement.classList.add('detailedfairyBackground');
-    }
-    if (type2 == 'psychic') {
-        detailedElement.classList.add('detailedpsychicBackground');
-    }
-    if (type2 == 'rock') {
-        detailedElement.classList.add('detailedrockBackground');
-    }
-    if (type2 == 'ghost') {
-        detailedElement.classList.add('detailedghostBackground');
-    }
+    pokemonElement.classList.add(type1);
 }

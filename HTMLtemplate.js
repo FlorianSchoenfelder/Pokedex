@@ -18,7 +18,7 @@ function renderPokemonUrlsHTML(detailSightVariables, pokemonData, j) {
 
 function showPokemonHTML(detailSightVariables, pokemon, j) {
     return /*html*/`
-    <div class="pokemonBackground" id="detailedPokemon_${j}" onclick="closePokemon()">
+    <div class="pokemonBackground ${detailSightVariables.type1}" id="pokemon_${j}" onclick="closePokemon()">
         <div class="previousContainer" id="previous" onclick="stopPropagation(event)">
             <img onclick="toPreviousPokemon()" class="previous" src="./img/arrowPrevious.svg" alt="">
         </div>

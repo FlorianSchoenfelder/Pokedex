@@ -7,7 +7,7 @@
 }
 
 body {
-    background-image: linear-gradient(to top, #141e30, #243b55);
+    background-image: url(./img/backgroundGrass.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -20,17 +20,16 @@ body {
 
 ::-webkit-scrollbar {
     width: 12px;
-    background-image: linear-gradient(to top, #141e30, #243b55);
+    background-image: linear-gradient(to top, #34C537, #68C3EA);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #243b55;
     border-radius: 10px;
-    border: 2px solid white;
+    border: 3px solid rgba(0, 0, 0, 0.623);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #172535;
+    background: rgba(255, 255, 255, 0.61);
 }
 
 .d-none {
@@ -51,20 +50,12 @@ body {
 }
 
 .psyduck {
-    position: fixed;
+    position: absolute;
     z-index: -1;
-    height: 69%;
+    height: 500px;
     right: 200px;
-    top: -280px;
+    top: -200px;
     rotate: 180deg;
-}
-
-.cracksImage {
-    position: fixed;
-    z-index: -1;
-    height: 90%;
-    right: -120px;
-    bottom: -140px;
 }
 
 #mainContainer {
@@ -88,7 +79,7 @@ body {
 
 .header {
     height: 200px;
-    color: white;
+    color: #292929;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -117,10 +108,24 @@ input:focus-visible {
     outline: none;
 }
 
+.loadingScreen {
+    background-image: url(./img/loading.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    overflow: hidden;
+}
+
 .pokemon {
     width: 330px;
     height: 200px;
-    background-color: wheat;
     margin: 16px;
     display: flex;
     border-radius: 16px;
@@ -182,11 +187,13 @@ img:hover {
 .moreButton {
     padding: 16px;
     background-color: transparent;
-    color: white;
+    color: black;
     border-radius: 24px;
     width: 124px;
-    border: 1px solid white;
-    box-shadow: 1px 0px 6px white;
+    font-weight: 800;
+    font-size: 14px;
+    border: 1px solid black;
+    box-shadow: 1px 0px 6px black;
 }
 
 .moreButton:hover {
@@ -216,6 +223,7 @@ img:hover {
     justify-content: center;
     align-items: center;
     background-color: transparent;
+    overflow-y: scroll;
 }
 
 .pokemonCard {
@@ -312,7 +320,9 @@ img:hover {
     position: absolute;
     top: 16px;
     right: 16px;
-    display: none;
+    display: block;
+    filter: opacity(35%);
+    cursor: pointer;
 }
 
 .animateIn {
@@ -344,120 +354,142 @@ img:hover {
 }
 
 /* Card Backgrounds */
-.grassBackground {
-    background-color: #6aa01a;
-}
+/* .grass {
+    /* background-color: #6aa01a; */
+    /* background-image: linear-gradient(to top, #426311, #78b320);
+    background-repeat: no-repeat;
+} */
 
-.fireBackground {
+/* .fire {
     background-color: rgb(202, 84, 0)
 }
 
-.waterBackground {
+.water {
     background-color: #1295bd;
 }
 
-.bugBackground {
+.bug {
     background-color: #4a7a12;
 }
 
-.normalBackground {
+.normal {
     background-color: #7f8181;
 }
 
-.poisonBackground {
+.poison {
     background-color: #9043a5;
 }
 
-.electricBackground {
+.electric {
     background-color: #bba201;
 }
 
-.groundBackground {
+.ground {
     background-color: #9c8417;
 }
 
-.fairyBackground {
+.fairy {
     background-color: #7c0f5c;
 }
 
-.fightingBackground {
+.fighting {
     background-color: #e2cd6c;
 }
 
-.psychicBackground {
+.psychic {
     background-color: #c53589;
 }
 
-.rockBackground {
+.rock {
     background-color: #9b841c;
 }
 
-.ghostBackground {
+.ghost {
     background-color: #6e3eb8;
-}
+} */
 
 /* Detailed Card Backgrounds */
-.detailedgrassBackground {
+.grass {
     background-image: linear-gradient(to top, #426311, #78b320);
     background-repeat: no-repeat;
 }
 
-.detailedfireBackground {
+.fire {
     background-image: linear-gradient(to top, rgb(82, 35, 1), rgb(228, 96, 2));
     background-repeat: no-repeat;
 }
 
-.detailedwaterBackground {
+.water {
     background-image: linear-gradient(to top, #09475a, #18afdd);
     background-repeat: no-repeat;
 }
 
-.detailedbugBackground {
+.bug {
     background-image: linear-gradient(to top, #33550d, #67ac19);
     background-repeat: no-repeat;
 }
 
-.detailednormalBackground {
+.dark {
+    background-image: linear-gradient(to top, #0f0f0e, #50524e);
+    background-repeat: no-repeat;
+}
+
+.steel {
+    background-image: linear-gradient(to top, #575757, #b3b3b3);
+    background-repeat: no-repeat;
+}
+
+.ice {
+    background-image: linear-gradient(to top, #1f4f5e, #50c6eb);
+    background-repeat: no-repeat;
+}
+
+.dragon {
+    background-image: linear-gradient(to top, #4b1212, #f86c6c);
+    background-repeat: no-repeat;
+}
+
+.normal {
     background-image: linear-gradient(to top, #363636, #919191);
     background-repeat: no-repeat;
 }
 
-.detailedpoisonBackground {
+.poison {
     background-image: linear-gradient(to top, #5f2c6b, #a04ab8);
     background-repeat: no-repeat;
 }
 
-.detailedelectricBackground {
+.electric {
     background-image: linear-gradient(to top, #948000, #d1b501);
     background-repeat: no-repeat;
 }
 
-.detailedgroundBackground {
+.ground {
     background-image: linear-gradient(to top, #665611, #a78d19);
     background-repeat: no-repeat;
 }
 
-.detailedfairyBackground {
+.fairy {
     background-image: linear-gradient(to top, #580b41, #a8167c);
     background-repeat: no-repeat;
 }
 
-.detailedfightingBackground {
+.fighting {
     background-image: linear-gradient(to top, #a59344, #c0aa4a);
     background-repeat: no-repeat;
 }
 
-.detailedpsychicBackground {
-    background-image: linear-gradient(to top, #c53589, #c53589);
+.psychic {
+    background-image: linear-gradient(to top, #681c48, #c53589);
     background-repeat: no-repeat;
 }
 
-.detailedrockBackground {
-    background-image: linear-gradient(to top, #9b841c, #9b841c);
+.rock {
+    background-image: linear-gradient(to top, #5f5112, #9b841c);
     background-repeat: no-repeat;
 }
 
-.detailedghostBackground {
-    background-image: linear-gradient(to top, #6e3eb8, #6e3eb8);
+.ghost {
+    background-image: linear-gradient(to top, #2a1844, #6e3eb8);
     background-repeat: no-repeat;
 }

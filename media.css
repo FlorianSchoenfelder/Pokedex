@@ -7,11 +7,21 @@
         width: 60vw;
     }
 
+    .psyduck {
+        height: 450px;
+        right: 360px;
+    }
+
 }
 
 @media (max-width: 1200px) {
     .header {
         padding: 0px 70px;
+    }
+
+    .psyduck {
+        height: 440px;
+        right: 230px;
     }
 
     .cardIdNumber {
@@ -90,11 +100,6 @@
 
     .bodyInformation {
         justify-content: space-between;
-    }
-
-    .closeButton {
-        display: block;
-        filter: opacity(35%);
     }
 
     .psyduck {
