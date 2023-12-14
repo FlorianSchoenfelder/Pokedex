@@ -1,10 +1,12 @@
 let mainUrl = 'https://pokeapi.co/api/v2/pokemon/';
 let links = [];
+let pokemonArray = [];
 let loadBeginning = 30;
 let currentPokemon = 0;
 let loadedPokemons = [];
 let searchIndex = false;
 let pokemonStats = [];
+let timerForSearching = 0;
 
 async function init() {
     await loadpokemonApi();
@@ -24,12 +26,14 @@ async function loadpokemonApi() {
 
 async function renderPokemonUrls() {
     loadedPokemons = [];
+    pokemonArray= [];
     changeElements();
 
     for (let j = 0; j < links.length; j++) {
         const url = links[j];
         let response = await fetch(url);
         let pokemonData = await response.json();
+        pokemonArray.push(pokemonData);
         let detailSightVariables = variablesForDetailSight(pokemonData);
         loadedPokemons.push(pokemonData['name']);
         document.getElementById('mainContainer').innerHTML += renderPokemonUrlsHTML(detailSightVariables, pokemonData, j);
@@ -48,7 +52,7 @@ function changeElements() {
 
 async function loadMorePokemons() {
     loadAnimation();
-    loadBeginning += 50;
+    loadBeginning += 30;
     document.getElementById('mainContainer').innerHTML += '';
     links = [];
     loadedPokemons = [];
@@ -73,6 +77,7 @@ async function showPokemon(j) {
     let url = links[j];
     let response = await fetch(url);
     let pokemon = await response.json();
+    console.log(pokemon);
     let detailSightVariables = variablesForDetailSight(pokemon); // detailSightVariables hat alle Variablen aus der Funktion
     let pokemoncard = document.getElementById('showPokemon');
 
@@ -157,59 +162,43 @@ function variablesForDetailSight(pokemon) {
     };
 }
 
-async function searchPokemon() {
+function delaySearchPokemon() {
+    clearTimeout(timerForSearching);
+    timerForSearching = setTimeout(searchPokemon, 350); // Wartezeit von 350 Millisekunden
+}
+
+function searchPokemon() {
     let searchInput = document.getElementById('searching').value.toLowerCase();
     if (!searchInput == '') {
         clearPreviousResults();
-        loadAnimation();
-        
+
         document.getElementById('showMore').classList.add('d-none');
         searchIndex = true;
-        for (let index = 0; index < loadedPokemons.length; index++) {
-            let name = loadedPokemons[index];
-            if (name.toLowerCase().includes(searchInput)) {
-                setTimeout(await displayPokemon(name, index), 1000);
+        for (let index = 0; index < pokemonArray.length; index++) {
+            let name = pokemonArray[index];
+            
+
+            if (name['name'].toLowerCase().includes(searchInput)) {
+                document.getElementById('mainContainer').innerHTML += getPokemonHTML(name, index); 
+                document.getElementById('mainContainer').setAttribute("class", "mainContainerSearch");
+                selectBackground(name['types'][0]['type']['name'], index);
             }
         }
-        
-    }
-    else if (searchInput == '' && searchIndex === true) { //Aufgerufen wenn Textfeld leer
+    } else if (searchInput == '' && searchIndex === true) {
+        // Aufgerufen wenn Textfeld leer
         emptyInput();
     }
-    endLoadAnimation();
 }
 
 function clearPreviousResults() {
     let searchResultContainer = document.getElementById('mainContainer');
-        searchResultContainer.innerHTML = '';
+    searchResultContainer.innerHTML = '';
 }
 
-
-async function emptyInput() {
-    loadAnimation();
+function emptyInput() {
     searchIndex = false;
-    setTimeout(await renderPokemonUrls(), 2000);
+    renderPokemonUrls();
     document.getElementById('showMore').classList.remove('d-none');
-    endLoadAnimation();
-}
-
-async function displayPokemon(pokemon, index) {
-    try {
-        let link = mainUrl + `${pokemon}`;
-        let response = await fetch(link);
-
-        if (!response.ok) {
-            throw new Error(`Unable to fetch data for ${pokemon}`);
-        }
-        let data = await response.json();
-        let pokemonHTML = getPokemonHTML(data, index);
-        document.getElementById('mainContainer').innerHTML += pokemonHTML;
-        selectBackground(data['types'][0]['type']['name'], index);
-        document.getElementById('mainContainer').setAttribute("class", "mainContainerSearch");
-
-    } catch (error) {
-        alert(error);
-    }
 }
 
 function stopPropagation(event) {
